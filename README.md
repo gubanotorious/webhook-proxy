@@ -2,7 +2,7 @@
 Webhook proxy to route and debug webhook calls to a local dev environment
 
 ## Overview
-In developing solutions that rely on third-party webhooks, often those third-parties will require a SSL webhook address with a valid SSL certificate, even when using a sandbox / test environment.  This is a quick proxy that can be hosted publically that can take advantage of a shared SSL certificate to meet the third-party requirements and route the request to a specified target.
+In developing solutions that rely on third-party webhooks, often those third-parties will require a SSL webhook address with a valid SSL certificate, even when using a sandbox / test environment.  This is a quick proxy that can be hosted externally with a domain / SSL cert to meet third-party requirements and route the request to a specified non-SSL target url.
 
 ## Usage
 #### Modify appsettings.json to configure:
