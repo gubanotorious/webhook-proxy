@@ -25,7 +25,7 @@ namespace WebhookProxy.Controllers
             ServicesUtility utility = new ServicesUtility(_configuration);
             try
             {
-                utility.RelayMessage(payload);
+                utility.RelayMessage(payload, false, Request.Headers);
             }
             catch(Exception ex)
             {
@@ -43,13 +43,12 @@ namespace WebhookProxy.Controllers
             ServicesUtility utility = new ServicesUtility(_configuration);
             try
             {
-                var res = utility.RelayMessage("{\"test\":\"true\"}");
+                var res = utility.RelayMessage("{\"test\":\"true\"}", true, Request.Headers);
             }
             catch (Exception ex)
             {
                 return new ObjectResult("Could not send test message to target: " + ex.Message);
             }
-
 
             return new OkObjectResult("Sent test message successfully.");
         }

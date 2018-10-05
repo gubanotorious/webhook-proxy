@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -36,21 +37,27 @@ namespace WebhookProxy.Utility
             _configuration = configuration;
         }
 
-        public dynamic RelayMessage(string payload)
+        public dynamic RelayMessage(string payload, bool test, IHeaderDictionary headers)
         {
+            if (headers == null)
+                headers = new HeaderDictionary();
+
+            //Find the target URL
             var target = _configuration.GetSection("Target")["Location"];
+            if (test)
+                target = _configuration.GetSection("Target")["TestLocation"];
+
             var securityHeaderValue = _configuration.GetSection("Target")["SecurityHeader"];
 
-            Dictionary<string, string> headers = new Dictionary<string, string>();
             headers.Add("securityheader", securityHeaderValue);
 
             var res = CallService(ServiceAction.POST, headers, target, payload, true);
             return res;
         }
 
-        public dynamic CallService(ServiceAction action, Dictionary<string, string> headerValues, string url, string jsonContent, bool handleError)
+        public dynamic CallService(ServiceAction action, IHeaderDictionary headers, string url, string jsonContent, bool handleError)
         {
-            var res = CallService(action, headerValues, url, jsonContent);
+            var res = CallService(action, headers, url, jsonContent);
             dynamic json = JsonConvert.DeserializeObject(res);
 
             //If we have a custom object returned from the called service that wants to pass us its internal errors, 
@@ -71,7 +78,7 @@ namespace WebhookProxy.Utility
         /// <param name="url"></param>
         /// <param name="jsonContent"></param>
         /// <returns></returns>
-        private dynamic CallService(ServiceAction action, Dictionary<string, string> headerValues, string url, string jsonContent)
+        private dynamic CallService(ServiceAction action, IHeaderDictionary headers, string url, string jsonContent)
         {
             string res = null;
 
@@ -80,9 +87,11 @@ namespace WebhookProxy.Utility
                 //Set the content type header
                 client.Headers[HttpRequestHeader.ContentType] = "application/json";
 
-                foreach (var header in headerValues)
+                foreach (var header in headers)
                 {
-                    client.Headers.Add(header.Key, header.Value);
+                    //Make sure we aren't trying to add Keep-Alive or other restricted header types
+                    if(!WebHeaderCollection.IsRestricted(header.Key))
+                        client.Headers.Add(header.Key, header.Value);
                 }
 
                 if (action == ServiceAction.GET)
