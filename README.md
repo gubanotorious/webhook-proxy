@@ -6,8 +6,6 @@ In developing solutions that rely on third-party webhooks, often those third-par
 
 ## Usage
 Modify appsettings.json to configure:
-###### Host:
-- Port: The port to listen on
 ##### Target:
 - Location: The URL to redirect requests to
 - SecurityHeader: The security header to pass with the request (optional)
