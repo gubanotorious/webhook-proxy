@@ -6,12 +6,12 @@ In developing solutions that rely on third-party webhooks, often those third-par
 
 ## Usage
 #### Modify appsettings.json to configure:
-###### Target:
+##### Target:
 - Location: The URL to redirect requests to
 - TestLocation: The URL to send a test message to
 - SecurityHeader: The security header to pass with the request (optional)
 
-#### Verify configuration
+#### Verify configuration:
 After starting the proxy, hit https://[publishedurlandport]/api/webhook to route a test message through to your desired endpoint
 
 #### Disclaimer:
