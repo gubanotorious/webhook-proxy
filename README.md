@@ -15,4 +15,4 @@ In developing solutions that rely on third-party webhooks, often those third-par
 After starting the proxy, hit https://[publishedurlandport]/api/webhook to route a test message through to your desired endpoint
 
 #### Disclaimer:
-This is not intended to be a solution to be used in a production environment.  This is intended for sandbox testing when there is a hard requirement of a valid SSL secured webhook endpoint.
+This is not intended to be a solution to be used in a production environment.  This is intended for third-party sandbox testing when there is a hard requirement of a valid SSL secured webhook endpoint to send requests to.
